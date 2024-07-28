@@ -1,42 +1,58 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import React, {useState, useEffect} from "react"
 
-//NAVIGATION
-import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator} from "@react-navigation/native-stack"
+import type {PropsWithChildren} from 'react';
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
 
-//SCREENS
-import Home from './screens/Home'
-import Details from './screens/Details'
-
-export type RootStackParamList = {
-    Home :undefined;
-    Details : {productId:string};
-}
-
-const Stack = createNativeStackNavigator<RootStackParamList>()
+import {setupPlayer, addTrack} from "../musicPlayerServices"
+import MusicPlayer from "./screens/MusicPlayer";
 
 
-export default function App():JSX.Element {
+function App(): JSX.Element {
+  const [isPlayerReady, setIsPaylerReady] = useState(false)
+
+  async function setup(){
+    let isSetup = await setupPlayer()
+
+    if (isSetup) {
+      await addTrack()
+    }
+
+    setIsPaylerReady(isSetup)
+  }
+
+  useEffect(() => {
+    setup()
+  }, [])
+  
+  if (!isPlayerReady) {
+    return (
+      <SafeAreaView>
+        <ActivityIndicator />
+      </SafeAreaView>
+    )
+  }
+
   return (
-   
-   <NavigationContainer>
-    <Stack.Navigator initialRouteName='Home'>
-         <Stack.Screen
-         name='Home'
-         component={Home}
-         options={{
-            title:'Trending Products'
-         }}
-         />
-         <Stack.Screen
-         name='Details'
-         component={Details}
-         options={{
-            title:'Products Details'
-         }}
-         />
-    </Stack.Navigator>
-   </NavigationContainer>
-  )
+    <View style={styles.container}>
+      <StatusBar barStyle={"light-content"} />
+      <MusicPlayer />
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  container:{
+    flex: 1
+  }
+});
+
+export default App;
