@@ -1,14 +1,10 @@
 import React, {useState, useEffect} from "react"
 
-import type {PropsWithChildren} from 'react';
 import {
   ActivityIndicator,
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
-  useColorScheme,
   View,
 } from 'react-native';
 
