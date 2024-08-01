@@ -1,4 +1,4 @@
-package com.spotifymusic
+package com.Adify
 
 import android.app.Application
 import com.facebook.react.PackageList
